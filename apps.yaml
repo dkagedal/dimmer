@@ -1,0 +1,15 @@
+dimmer1:
+  module: dimmer
+  class: Dimmer
+  input: input_select.dimmer1
+  attribute: brightness
+  entities:
+    - light.girafflampan
+    - light.sofflampan
+kitchen_dimmer:
+  module: dimmer
+  class: Dimmer
+  input: input_select.kitchen_dimmer
+  speed: 8
+  entities:
+    - light.kokslampan
