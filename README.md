@@ -1,5 +1,7 @@
 # Dimmer
 
+David Kågedal, January 2020
+
 This is an AppDaemon app for dimming things. There are many such apps,
 and the reason this app exists is not that it is better at dimming all
 kinds of lights (it isn't), but because of its approach to dimming
@@ -14,12 +16,16 @@ using an `input_number` as the dimmer state. The input can be in the
 zero state to indicate no dimming is taking place, in a positive state
 to indicate it's dimming up, and a negative state to indicate it's
 dimming down. The actual input value controls how fast dimming
-happens. When dimmin reaches an end (saturated) state, the input is
+happens. When dimming reaches an end (saturated) state, the input is
 automatically reset to zero.
 
-This way the dimmer state can be controlled from one or more buttons
-and also from the Lovelace UI and the API without an explosion of
+The dimmer state can then be controlled from one or more buttons and
+also from the Lovelace UI and the API without an explosion of
 automations.
+
+This separation of dimmer state that controls the lights, and the
+automation that lets the buttons control the dimmer state provides a
+powerful flexibility and lets you hook up dimming in any way you want.
 
 ## Configuration
 
@@ -48,6 +54,9 @@ automations work, but they make the dimmer much more useful in an
 
 ### The app
 
+Download the `dimmer.py` file and install it in AppDaemon. Then add
+this to an `apps.yaml` file:
+
 ```yaml
 bedroom_dimmer_app:
   module: dimmer
@@ -60,11 +69,13 @@ bedroom_dimmer_app:
 
 This will make the dimmer update the `brightness` attribute of the two
 lights every second, by an amount taken from
-`input_number.bedroom_dimmer`. It will update them from where they are
-and not move them to matching brightness, and they may saturate at
-different times.
+`input_number.bedroom_dimmer`. 
 
-The app also supports dimming other attributes than `brightness` by providing an `attribute` configuration:
+When dimming is activated, the app will update the lights from their
+current values, not move them to a single brightness value.
+
+The app also supports contolling other attributes than `brightness` by
+providing an `attribute` configuration:
 
 ```yaml
 temp_dimmer_app:
@@ -78,16 +89,21 @@ temp_dimmer_app:
 
 It should be possible to use this to change all kinds of atributes
 like media player volume etc, but brightness and color temperature
-those I have tested.
+are those I have tested.
 
 ### Buttons
 
-Hooking up a dimmer button is not a reasonably straightforward
-exercise in making Home Assistant automations. It is probably simplest
-to use the UI to create a device automation on the "long press" and
-"long press release" triggers on the button devices. I have tested
-with an IKEA Trådfri on/off switch but any remote should work as long
-as you can automate the long press and releas.
+Adding the input number to an `entities` card will provide a simple
+dimmer UI that works well for testing, before creating the
+automations. But in most cases, real buttons are most useful for
+dimming.
+
+Hooking up a dimmer button is a straightforward exercise in making
+Home Assistant automations. It is probably simplest to use the UI to
+create a device automation on the "long press" and "long press
+release" triggers on the button devices. I have tested with an IKEA
+Trådfri on/off switch but any remote should work as long as you can
+automate the long press and release.
 
 Four automations are needed, for the combinations of up/down and
 press/release. They should have action that looks similar to thes:
