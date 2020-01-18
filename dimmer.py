@@ -46,7 +46,7 @@ class Dimmer(hass.Hass):
                               **{self.dim_attribute: new_value})
         if entities:
             self.log("Continuing with {}".format(", ".join(entities.keys())))
-            self.timer = self.run_in(self.update, 1, entities=entities, delta=delta)
+            self.run_in(self.update, 1, entities=entities, delta=delta)
         else:
             self.log("Nothing more to dim")
             self.set_value(self.dimmer_input, 0)
